@@ -10,6 +10,6 @@ COPY . .
 
 RUN npm run build
 
-EXPOSE 8080 # Or the port your server listens on - check the server's code!
+EXPOSE 8080
 
 CMD ["node", "build/index.js"]
