@@ -1,21 +1,119 @@
-# WooCommerce MCP Server
+# WooCommerce MCP Server for Netlify
 
-A Model Context Protocol (MCP) server for WooCommerce integration, compatible with Windows, macOS, and Linux.
+A serverless WooCommerce MCP (Model Context Protocol) server deployed on Netlify Functions. This allows you to interact with WooCommerce stores via JSON-RPC API calls from Make.com and other automation platforms.
 
-## Overview
+## 🚀 Quick Deploy to Netlify
 
-This MCP server enables interaction with WooCommerce stores through the WordPress REST API. It provides comprehensive tools for managing all aspects of products, orders, customers, shipping, taxes, discounts, and store configuration using JSON-RPC 2.0 protocol.
+### Option 1: Deploy via Netlify Dashboard (Recommended)
 
-## Installation
+1. **Go to [netlify.com](https://netlify.com) and sign up/login**
+2. **Click "Add new site" → "Import an existing project"**
+3. **Connect your Git provider** (GitHub, GitLab, etc.)
+4. **Select this repository**
+5. **Configure build settings:**
+   - Build command: `npm run build`
+   - Publish directory: `.`
+   - Functions directory: `netlify/functions`
+6. **Click "Deploy site"**
 
-1. Clone the repository
-2. Install dependencies:
+### Option 2: Deploy via Netlify CLI
+
 ```bash
+# Install dependencies
 npm install
+
+# Install Netlify CLI globally
+npm install -g netlify-cli
+
+# Login to Netlify
+netlify login
+
+# Initialize your site
+netlify init
+
+# Deploy to production
+netlify deploy --prod
 ```
-3. Build the project:
+
+## 🔧 Environment Variables Setup
+
+After deployment, configure these environment variables in your Netlify dashboard:
+
+1. Go to **Site settings → Environment variables**
+2. Add the following variables:
+
+| Variable | Description | Example |
+|----------|-------------|---------|
+| `WORDPRESS_SITE_URL` | Your WordPress/WooCommerce site URL | `https://yourstore.com` |
+| `WORDPRESS_USERNAME` | WordPress admin username | `admin` |
+| `WORDPRESS_PASSWORD` | WordPress application password | `xxxx xxxx xxxx xxxx` |
+| `WOOCOMMERCE_CONSUMER_KEY` | WooCommerce REST API consumer key | `ck_xxxxxxxxxxxxx` |
+| `WOOCOMMERCE_CONSUMER_SECRET` | WooCommerce REST API consumer secret | `cs_xxxxxxxxxxxxx` |
+
+### Getting WooCommerce API Keys
+
+1. Go to your WordPress admin: **WooCommerce → Settings → Advanced → REST API**
+2. Click **Add key**
+3. Set permissions to **Read/Write**
+4. Copy the Consumer Key and Consumer Secret
+
+## 📡 Your API Endpoint
+
+After deployment, your MCP server will be available at:
+```
+https://YOUR-SITE-NAME.netlify.app/.netlify/functions/mcp-server
+```
+
+You can also access it via these shorter URLs:
+```
+https://YOUR-SITE-NAME.netlify.app/mcp
+https://YOUR-SITE-NAME.netlify.app/api/mcp-server
+```
+
+## 🧪 Test Your Deployment
+
+Test with a simple GET products request:
+
 ```bash
-npm run build
+curl -X POST https://YOUR-SITE-NAME.netlify.app/.netlify/functions/mcp-server \
+  -H "Content-Type: application/json" \
+  -d '{
+    "jsonrpc": "2.0",
+    "id": "1",
+    "method": "get_products",
+    "params": {
+      "perPage": 5
+    }
+  }'
+```
+
+## 🔗 Integration with Make.com
+
+### Step 1: Create HTTP Module
+1. In Make.com, add an **HTTP** module
+2. Select **Make a request**
+
+### Step 2: Configure the Request
+- **URL**: `https://YOUR-SITE-NAME.netlify.app/.netlify/functions/mcp-server`
+- **Method**: `POST`
+- **Headers**: 
+  ```
+  Content-Type: application/json
+  ```
+- **Body Type**: `Raw`
+- **Content Type**: `JSON (application/json)`
+
+### Step 3: Request Body Format
+```json
+{
+  "jsonrpc": "2.0",
+  "id": "{{1.id}}",
+  "method": "get_products",
+  "params": {
+    "perPage": 10,
+    "page": 1
+  }
+}
 ```
 
 ## Configuration
