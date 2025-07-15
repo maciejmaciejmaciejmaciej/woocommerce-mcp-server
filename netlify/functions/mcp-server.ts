@@ -586,7 +586,24 @@ export const handler: Handler = async (event: HandlerEvent, context: HandlerCont
     };
   }
 
-  // Only allow POST requests
+  // Handle GET requests for health check
+  if (event.httpMethod === "GET") {
+    return {
+      statusCode: 200,
+      headers,
+      body: JSON.stringify({
+        name: "WooCommerce MCP Server",
+        version: "1.0.0",
+        status: "running",
+        endpoints: {
+          mcp: "/.netlify/functions/mcp-server (POST with MCP protocol)",
+          direct: "/.netlify/functions/mcp-server (POST with JSON-RPC)"
+        }
+      }),
+    };
+  }
+
+  // Only allow POST requests for MCP/JSON-RPC
   if (event.httpMethod !== "POST") {
     return {
       statusCode: 405,
@@ -610,7 +627,129 @@ export const handler: Handler = async (event: HandlerEvent, context: HandlerCont
       throw new Error("Invalid JSON-RPC version");
     }
 
-    // Handle the WooCommerce request
+    // Handle MCP protocol methods
+    if (request.method === "initialize") {
+      return {
+        statusCode: 200,
+        headers,
+        body: JSON.stringify({
+          jsonrpc: "2.0",
+          id: request.id,
+          result: {
+            protocolVersion: "2024-11-05",
+            capabilities: {
+              tools: {
+                listChanged: true
+              }
+            },
+            serverInfo: {
+              name: "woocommerce-mcp-server",
+              version: "1.0.0"
+            }
+          },
+        }),
+      };
+    }
+
+    if (request.method === "notifications/initialized") {
+      return {
+        statusCode: 200,
+        headers,
+        body: JSON.stringify({
+          jsonrpc: "2.0",
+          id: request.id,
+          result: {}
+        }),
+      };
+    }
+
+    if (request.method === "tools/list") {
+      return {
+        statusCode: 200,
+        headers,
+        body: JSON.stringify({
+          jsonrpc: "2.0",
+          id: request.id,
+          result: {
+            tools: [
+              {
+                name: "get_products",
+                description: "Get WooCommerce products",
+                inputSchema: {
+                  type: "object",
+                  properties: {
+                    perPage: { type: "number", description: "Products per page" },
+                    page: { type: "number", description: "Page number" }
+                  }
+                }
+              },
+              {
+                name: "get_orders",
+                description: "Get WooCommerce orders",
+                inputSchema: {
+                  type: "object",
+                  properties: {
+                    perPage: { type: "number", description: "Orders per page" },
+                    page: { type: "number", description: "Page number" }
+                  }
+                }
+              },
+              {
+                name: "create_product",
+                description: "Create a new WooCommerce product",
+                inputSchema: {
+                  type: "object",
+                  properties: {
+                    productData: { type: "object", description: "Product data" }
+                  },
+                  required: ["productData"]
+                }
+              }
+            ]
+          }
+        }),
+      };
+    }
+
+    if (request.method === "tools/call") {
+      const toolName = request.params?.name;
+      const toolArguments = request.params?.arguments || {};
+      
+      try {
+        const result = await handleWooCommerceRequest(toolName, toolArguments);
+        return {
+          statusCode: 200,
+          headers,
+          body: JSON.stringify({
+            jsonrpc: "2.0",
+            id: request.id,
+            result: {
+              content: [
+                {
+                  type: "text",
+                  text: JSON.stringify(result, null, 2)
+                }
+              ]
+            }
+          }),
+        };
+      } catch (error) {
+        return {
+          statusCode: 200,
+          headers,
+          body: JSON.stringify({
+            jsonrpc: "2.0",
+            id: request.id,
+            error: {
+              code: -32000,
+              message: error instanceof Error ? error.message : String(error)
+            }
+          }),
+        };
+      }
+    }
+
+    // Handle direct WooCommerce requests (for backwards compatibility)
     const result = await handleWooCommerceRequest(
       request.method,
       request.params
