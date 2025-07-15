@@ -672,39 +672,118 @@ export const handler: Handler = async (event: HandlerEvent, context: HandlerCont
           id: request.id,
           result: {
             tools: [
-              {
-                name: "get_products",
-                description: "Get WooCommerce products",
-                inputSchema: {
-                  type: "object",
-                  properties: {
-                    perPage: { type: "number", description: "Products per page" },
-                    page: { type: "number", description: "Page number" }
-                  }
-                }
-              },
-              {
-                name: "get_orders",
-                description: "Get WooCommerce orders",
-                inputSchema: {
-                  type: "object",
-                  properties: {
-                    perPage: { type: "number", description: "Orders per page" },
-                    page: { type: "number", description: "Page number" }
-                  }
-                }
-              },
-              {
-                name: "create_product",
-                description: "Create a new WooCommerce product",
-                inputSchema: {
-                  type: "object",
-                  properties: {
-                    productData: { type: "object", description: "Product data" }
-                  },
-                  required: ["productData"]
-                }
-              }
+              // Products
+              { name: "get_products", description: "Get WooCommerce products", inputSchema: { type: "object", properties: { perPage: { type: "number" }, page: { type: "number" }, filters: { type: "object" } } } },
+              { name: "get_product", description: "Get single WooCommerce product", inputSchema: { type: "object", properties: { productId: { type: "number" } }, required: ["productId"] } },
+              { name: "create_product", description: "Create new WooCommerce product", inputSchema: { type: "object", properties: { productData: { type: "object" } }, required: ["productData"] } },
+              { name: "update_product", description: "Update WooCommerce product", inputSchema: { type: "object", properties: { productId: { type: "number" }, productData: { type: "object" } }, required: ["productId", "productData"] } },
+              { name: "delete_product", description: "Delete WooCommerce product", inputSchema: { type: "object", properties: { productId: { type: "number" }, force: { type: "boolean" } }, required: ["productId"] } },
+              
+              // Orders
+              { name: "get_orders", description: "Get WooCommerce orders", inputSchema: { type: "object", properties: { perPage: { type: "number" }, page: { type: "number" }, filters: { type: "object" } } } },
+              { name: "get_order", description: "Get single WooCommerce order", inputSchema: { type: "object", properties: { orderId: { type: "number" } }, required: ["orderId"] } },
+              { name: "create_order", description: "Create new WooCommerce order", inputSchema: { type: "object", properties: { orderData: { type: "object" } }, required: ["orderData"] } },
+              { name: "update_order", description: "Update WooCommerce order", inputSchema: { type: "object", properties: { orderId: { type: "number" }, orderData: { type: "object" } }, required: ["orderId", "orderData"] } },
+              { name: "delete_order", description: "Delete WooCommerce order", inputSchema: { type: "object", properties: { orderId: { type: "number" }, force: { type: "boolean" } }, required: ["orderId"] } },
+              
+              // Customers
+              { name: "get_customers", description: "Get WooCommerce customers", inputSchema: { type: "object", properties: { perPage: { type: "number" }, page: { type: "number" }, filters: { type: "object" } } } },
+              { name: "get_customer", description: "Get single WooCommerce customer", inputSchema: { type: "object", properties: { customerId: { type: "number" } }, required: ["customerId"] } },
+              { name: "create_customer", description: "Create new WooCommerce customer", inputSchema: { type: "object", properties: { customerData: { type: "object" } }, required: ["customerData"] } },
+              { name: "update_customer", description: "Update WooCommerce customer", inputSchema: { type: "object", properties: { customerId: { type: "number" }, customerData: { type: "object" } }, required: ["customerId", "customerData"] } },
+              { name: "delete_customer", description: "Delete WooCommerce customer", inputSchema: { type: "object", properties: { customerId: { type: "number" }, force: { type: "boolean" } }, required: ["customerId"] } },
+              
+              // Reports
+              { name: "get_sales_report", description: "Get WooCommerce sales report", inputSchema: { type: "object", properties: { period: { type: "string" }, dateMin: { type: "string" }, dateMax: { type: "string" } } } },
+              { name: "get_products_report", description: "Get WooCommerce products report", inputSchema: { type: "object", properties: { period: { type: "string" }, dateMin: { type: "string" }, dateMax: { type: "string" }, perPage: { type: "number" } } } },
+              { name: "get_orders_report", description: "Get WooCommerce orders report", inputSchema: { type: "object", properties: { period: { type: "string" }, dateMin: { type: "string" }, dateMax: { type: "string" }, perPage: { type: "number" } } } },
+              { name: "get_categories_report", description: "Get WooCommerce categories report", inputSchema: { type: "object", properties: { perPage: { type: "number" }, page: { type: "number" } } } },
+              { name: "get_customers_report", description: "Get WooCommerce customers report", inputSchema: { type: "object", properties: { perPage: { type: "number" }, page: { type: "number" } } } },
+              { name: "get_stock_report", description: "Get WooCommerce stock report", inputSchema: { type: "object", properties: { perPage: { type: "number" }, page: { type: "number" } } } },
+              
+              // Categories & Tags
+              { name: "get_product_categories", description: "Get WooCommerce product categories", inputSchema: { type: "object", properties: { perPage: { type: "number" }, page: { type: "number" } } } },
+              { name: "get_product_category", description: "Get single product category", inputSchema: { type: "object", properties: { categoryId: { type: "number" } }, required: ["categoryId"] } },
+              { name: "create_product_category", description: "Create product category", inputSchema: { type: "object", properties: { categoryData: { type: "object" } }, required: ["categoryData"] } },
+              { name: "update_product_category", description: "Update product category", inputSchema: { type: "object", properties: { categoryId: { type: "number" }, categoryData: { type: "object" } }, required: ["categoryId", "categoryData"] } },
+              { name: "delete_product_category", description: "Delete product category", inputSchema: { type: "object", properties: { categoryId: { type: "number" }, force: { type: "boolean" } }, required: ["categoryId"] } },
+              
+              { name: "get_product_tags", description: "Get WooCommerce product tags", inputSchema: { type: "object", properties: { perPage: { type: "number" }, page: { type: "number" } } } },
+              { name: "get_product_tag", description: "Get single product tag", inputSchema: { type: "object", properties: { tagId: { type: "number" } }, required: ["tagId"] } },
+              { name: "create_product_tag", description: "Create product tag", inputSchema: { type: "object", properties: { tagData: { type: "object" } }, required: ["tagData"] } },
+              { name: "update_product_tag", description: "Update product tag", inputSchema: { type: "object", properties: { tagId: { type: "number" }, tagData: { type: "object" } }, required: ["tagId", "tagData"] } },
+              { name: "delete_product_tag", description: "Delete product tag", inputSchema: { type: "object", properties: { tagId: { type: "number" }, force: { type: "boolean" } }, required: ["tagId"] } },
+              
+              // Coupons
+              { name: "get_coupons", description: "Get WooCommerce coupons", inputSchema: { type: "object", properties: { perPage: { type: "number" }, page: { type: "number" } } } },
+              { name: "get_coupon", description: "Get single coupon", inputSchema: { type: "object", properties: { couponId: { type: "number" } }, required: ["couponId"] } },
+              { name: "create_coupon", description: "Create new coupon", inputSchema: { type: "object", properties: { couponData: { type: "object" } }, required: ["couponData"] } },
+              { name: "update_coupon", description: "Update coupon", inputSchema: { type: "object", properties: { couponId: { type: "number" }, couponData: { type: "object" } }, required: ["couponId", "couponData"] } },
+              { name: "delete_coupon", description: "Delete coupon", inputSchema: { type: "object", properties: { couponId: { type: "number" }, force: { type: "boolean" } }, required: ["couponId"] } },
+              
+              // Order Notes
+              { name: "get_order_notes", description: "Get order notes", inputSchema: { type: "object", properties: { orderId: { type: "number" }, perPage: { type: "number" } }, required: ["orderId"] } },
+              { name: "get_order_note", description: "Get single order note", inputSchema: { type: "object", properties: { orderId: { type: "number" }, noteId: { type: "number" } }, required: ["orderId", "noteId"] } },
+              { name: "create_order_note", description: "Create order note", inputSchema: { type: "object", properties: { orderId: { type: "number" }, noteData: { type: "object" } }, required: ["orderId", "noteData"] } },
+              { name: "delete_order_note", description: "Delete order note", inputSchema: { type: "object", properties: { orderId: { type: "number" }, noteId: { type: "number" } }, required: ["orderId", "noteId"] } },
+              
+              // Product Variations
+              { name: "get_product_variations", description: "Get product variations", inputSchema: { type: "object", properties: { productId: { type: "number" }, perPage: { type: "number" } }, required: ["productId"] } },
+              { name: "get_product_variation", description: "Get single product variation", inputSchema: { type: "object", properties: { productId: { type: "number" }, variationId: { type: "number" } }, required: ["productId", "variationId"] } },
+              { name: "create_product_variation", description: "Create product variation", inputSchema: { type: "object", properties: { productId: { type: "number" }, variationData: { type: "object" } }, required: ["productId", "variationData"] } },
+              { name: "update_product_variation", description: "Update product variation", inputSchema: { type: "object", properties: { productId: { type: "number" }, variationId: { type: "number" }, variationData: { type: "object" } }, required: ["productId", "variationId", "variationData"] } },
+              { name: "delete_product_variation", description: "Delete product variation", inputSchema: { type: "object", properties: { productId: { type: "number" }, variationId: { type: "number" }, force: { type: "boolean" } }, required: ["productId", "variationId"] } },
+              
+              // Product Attributes
+              { name: "get_product_attributes", description: "Get product attributes", inputSchema: { type: "object", properties: { perPage: { type: "number" }, page: { type: "number" } } } },
+              { name: "get_product_attribute", description: "Get single product attribute", inputSchema: { type: "object", properties: { attributeId: { type: "number" } }, required: ["attributeId"] } },
+              { name: "create_product_attribute", description: "Create product attribute", inputSchema: { type: "object", properties: { attributeData: { type: "object" } }, required: ["attributeData"] } },
+              { name: "update_product_attribute", description: "Update product attribute", inputSchema: { type: "object", properties: { attributeId: { type: "number" }, attributeData: { type: "object" } }, required: ["attributeId", "attributeData"] } },
+              { name: "delete_product_attribute", description: "Delete product attribute", inputSchema: { type: "object", properties: { attributeId: { type: "number" }, force: { type: "boolean" } }, required: ["attributeId"] } },
+              
+              // Shipping
+              { name: "get_shipping_zones", description: "Get shipping zones", inputSchema: { type: "object", properties: {} } },
+              { name: "get_shipping_zone", description: "Get single shipping zone", inputSchema: { type: "object", properties: { zoneId: { type: "number" } }, required: ["zoneId"] } },
+              { name: "create_shipping_zone", description: "Create shipping zone", inputSchema: { type: "object", properties: { zoneData: { type: "object" } }, required: ["zoneData"] } },
+              { name: "update_shipping_zone", description: "Update shipping zone", inputSchema: { type: "object", properties: { zoneId: { type: "number" }, zoneData: { type: "object" } }, required: ["zoneId", "zoneData"] } },
+              { name: "delete_shipping_zone", description: "Delete shipping zone", inputSchema: { type: "object", properties: { zoneId: { type: "number" }, force: { type: "boolean" } }, required: ["zoneId"] } },
+              
+              // Tax
+              { name: "get_tax_rates", description: "Get tax rates", inputSchema: { type: "object", properties: { perPage: { type: "number" }, page: { type: "number" } } } },
+              { name: "get_tax_rate", description: "Get single tax rate", inputSchema: { type: "object", properties: { rateId: { type: "number" } }, required: ["rateId"] } },
+              { name: "create_tax_rate", description: "Create tax rate", inputSchema: { type: "object", properties: { taxRateData: { type: "object" } }, required: ["taxRateData"] } },
+              { name: "update_tax_rate", description: "Update tax rate", inputSchema: { type: "object", properties: { rateId: { type: "number" }, taxRateData: { type: "object" } }, required: ["rateId", "taxRateData"] } },
+              { name: "delete_tax_rate", description: "Delete tax rate", inputSchema: { type: "object", properties: { rateId: { type: "number" }, force: { type: "boolean" } }, required: ["rateId"] } },
+              
+              // Payment Gateways
+              { name: "get_payment_gateways", description: "Get payment gateways", inputSchema: { type: "object", properties: {} } },
+              { name: "get_payment_gateway", description: "Get single payment gateway", inputSchema: { type: "object", properties: { gatewayId: { type: "string" } }, required: ["gatewayId"] } },
+              { name: "update_payment_gateway", description: "Update payment gateway", inputSchema: { type: "object", properties: { gatewayId: { type: "string" }, gatewayData: { type: "object" } }, required: ["gatewayId", "gatewayData"] } },
+              
+              // Meta Data
+              { name: "get_product_meta", description: "Get product meta data", inputSchema: { type: "object", properties: { productId: { type: "number" }, metaKey: { type: "string" } }, required: ["productId"] } },
+              { name: "create_product_meta", description: "Create product meta data", inputSchema: { type: "object", properties: { productId: { type: "number" }, metaKey: { type: "string" }, metaValue: {} }, required: ["productId", "metaKey", "metaValue"] } },
+              { name: "update_product_meta", description: "Update product meta data", inputSchema: { type: "object", properties: { productId: { type: "number" }, metaKey: { type: "string" }, metaValue: {} }, required: ["productId", "metaKey", "metaValue"] } },
+              { name: "delete_product_meta", description: "Delete product meta data", inputSchema: { type: "object", properties: { productId: { type: "number" }, metaKey: { type: "string" } }, required: ["productId", "metaKey"] } },
+              
+              { name: "get_order_meta", description: "Get order meta data", inputSchema: { type: "object", properties: { orderId: { type: "number" }, metaKey: { type: "string" } }, required: ["orderId"] } },
+              { name: "create_order_meta", description: "Create order meta data", inputSchema: { type: "object", properties: { orderId: { type: "number" }, metaKey: { type: "string" }, metaValue: {} }, required: ["orderId", "metaKey", "metaValue"] } },
+              { name: "update_order_meta", description: "Update order meta data", inputSchema: { type: "object", properties: { orderId: { type: "number" }, metaKey: { type: "string" }, metaValue: {} }, required: ["orderId", "metaKey", "metaValue"] } },
+              { name: "delete_order_meta", description: "Delete order meta data", inputSchema: { type: "object", properties: { orderId: { type: "number" }, metaKey: { type: "string" } }, required: ["orderId", "metaKey"] } },
+              
+              { name: "get_customer_meta", description: "Get customer meta data", inputSchema: { type: "object", properties: { customerId: { type: "number" }, metaKey: { type: "string" } }, required: ["customerId"] } },
+              { name: "create_customer_meta", description: "Create customer meta data", inputSchema: { type: "object", properties: { customerId: { type: "number" }, metaKey: { type: "string" }, metaValue: {} }, required: ["customerId", "metaKey", "metaValue"] } },
+              { name: "update_customer_meta", description: "Update customer meta data", inputSchema: { type: "object", properties: { customerId: { type: "number" }, metaKey: { type: "string" }, metaValue: {} }, required: ["customerId", "metaKey", "metaValue"] } },
+              { name: "delete_customer_meta", description: "Delete customer meta data", inputSchema: { type: "object", properties: { customerId: { type: "number" }, metaKey: { type: "string" } }, required: ["customerId", "metaKey"] } },
+              
+              // WordPress Posts
+              { name: "create_post", description: "Create WordPress post", inputSchema: { type: "object", properties: { title: { type: "string" }, content: { type: "string" }, status: { type: "string" } }, required: ["title", "content"] } },
+              { name: "get_posts", description: "Get WordPress posts", inputSchema: { type: "object", properties: { perPage: { type: "number" }, page: { type: "number" } } } },
+              { name: "update_post", description: "Update WordPress post", inputSchema: { type: "object", properties: { postId: { type: "number" }, title: { type: "string" }, content: { type: "string" }, status: { type: "string" } }, required: ["postId"] } },
+              { name: "get_post_meta", description: "Get WordPress post meta", inputSchema: { type: "object", properties: { postId: { type: "number" }, metaKey: { type: "string" } }, required: ["postId"] } },
+              { name: "create_post_meta", description: "Create WordPress post meta", inputSchema: { type: "object", properties: { postId: { type: "number" }, metaKey: { type: "string" }, metaValue: {} }, required: ["postId", "metaKey", "metaValue"] } },
+              { name: "update_post_meta", description: "Update WordPress post meta", inputSchema: { type: "object", properties: { postId: { type: "number" }, metaId: { type: "number" }, metaValue: {} }, required: ["postId", "metaId", "metaValue"] } },
+              { name: "delete_post_meta", description: "Delete WordPress post meta", inputSchema: { type: "object", properties: { postId: { type: "number" }, metaId: { type: "number" } }, required: ["postId", "metaId"] } }
             ]
           }
         }),
