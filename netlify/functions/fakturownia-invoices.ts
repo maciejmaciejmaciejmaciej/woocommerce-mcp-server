@@ -44,14 +44,14 @@ export const handler: Handler = async (
     const request = JSON.parse(event.body || "{}");
 
     const allowedMethods = [
-      "fakt_inv_get_invoices",
-      "fakt_inv_get_invoice",
-      "fakt_inv_create_invoice",
-      "fakt_inv_update_invoice",
-      "fakt_inv_delete_invoice",
-      "fakt_inv_send_invoice_by_email",
-      "fakt_inv_change_invoice_status",
-      "fakt_inv_get_invoice_pdf"
+      "fakt_get_invoices",
+      "fakt_get_invoice",
+      "fakt_create_invoice",
+      "fakt_update_invoice",
+      "fakt_delete_invoice",
+      "fakt_send_invoice_by_email",
+      "fakt_change_invoice_status",
+      "fakt_get_invoice_pdf"
     ];
 
     if (request.method === "tools/list") {
@@ -195,23 +195,6 @@ export const handler: Handler = async (
             },
           }),
         };
-      }
-
-      // Map specialized names back to original names for main server
-      const nameMapping: Record<string, string> = {
-        "fakt_inv_get_invoices": "fakt_get_invoices",
-        "fakt_inv_get_invoice": "fakt_get_invoice",
-        "fakt_inv_create_invoice": "fakt_create_invoice",
-        "fakt_inv_update_invoice": "fakt_update_invoice",
-        "fakt_inv_delete_invoice": "fakt_delete_invoice",
-        "fakt_inv_send_invoice_by_email": "fakt_send_invoice_by_email",
-        "fakt_inv_change_invoice_status": "fakt_change_invoice_status",
-        "fakt_inv_get_invoice_pdf": "fakt_get_invoice_pdf"
-      };
-
-      // Replace the method name with the original name
-      if (nameMapping[toolName]) {
-        request.params.name = nameMapping[toolName];
       }
     }
 

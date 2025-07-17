@@ -21,6 +21,16 @@
   to = "/.netlify/functions/mcp-server"
   status = 200
 
+[[redirects]]
+  from = "/fakturownia"
+  to = "/.netlify/functions/fakturownia-server"
+  status = 200
+
+[[redirects]]
+  from = "/fakturownia/*"
+  to = "/.netlify/functions/fakturownia-server"
+  status = 200
+
 [functions]
   node_bundler = "esbuild"
 

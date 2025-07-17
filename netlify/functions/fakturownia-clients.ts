@@ -44,14 +44,12 @@ export const handler: Handler = async (
     const request = JSON.parse(event.body || "{}");
 
     const allowedMethods = [
-      "fakt_get_clients",
-      "fakt_get_client", 
-      "fakt_create_client",
-      "fakt_update_client",
-      "fakt_delete_client"
-    ];
-
-    if (request.method === "tools/list") {
+      "fakt_cli_get_clients",
+      "fakt_cli_get_client",
+      "fakt_cli_create_client",
+      "fakt_cli_update_client",
+      "fakt_cli_delete_client"
+    ];    if (request.method === "tools/list") {
       return {
         statusCode: 200,
         headers,
@@ -61,7 +59,7 @@ export const handler: Handler = async (
           result: {
             tools: [
               {
-                name: "fakt_get_clients",
+                name: "fakt_cli_get_clients",
                 description: "Get list of clients from Fakturownia",
                 inputSchema: {
                   type: "object",
@@ -77,7 +75,7 @@ export const handler: Handler = async (
                 }
               },
               {
-                name: "fakt_get_client",
+                name: "fakt_cli_get_client",
                 description: "Get single client by ID",
                 inputSchema: {
                   type: "object",
@@ -90,7 +88,7 @@ export const handler: Handler = async (
                 }
               },
               {
-                name: "fakt_create_client",
+                name: "fakt_cli_create_client",
                 description: "Create new client in Fakturownia",
                 inputSchema: {
                   type: "object",
@@ -103,7 +101,7 @@ export const handler: Handler = async (
                 }
               },
               {
-                name: "fakt_update_client",
+                name: "fakt_cli_update_client",
                 description: "Update existing client in Fakturownia",
                 inputSchema: {
                   type: "object",
@@ -117,7 +115,7 @@ export const handler: Handler = async (
                 }
               },
               {
-                name: "fakt_delete_client",
+                name: "fakt_cli_delete_client",
                 description: "Delete client from Fakturownia",
                 inputSchema: {
                   type: "object",

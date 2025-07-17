@@ -44,11 +44,11 @@ export const handler: Handler = async (
     const request = JSON.parse(event.body || "{}");
 
     const allowedMethods = [
-      "fakt_get_payments",
-      "fakt_get_payment",
-      "fakt_create_payment",
-      "fakt_update_payment",
-      "fakt_delete_payment"
+      "fakt_pay_get_payments",
+      "fakt_pay_get_payment",
+      "fakt_pay_create_payment",
+      "fakt_pay_update_payment",
+      "fakt_pay_delete_payment"
     ];
 
     if (request.method === "tools/list") {
@@ -61,7 +61,7 @@ export const handler: Handler = async (
           result: {
             tools: [
               {
-                name: "fakt_get_payments",
+                name: "fakt_pay_get_payments",
                 description: "Get list of payments from Fakturownia",
                 inputSchema: {
                   type: "object",
@@ -76,7 +76,7 @@ export const handler: Handler = async (
                 }
               },
               {
-                name: "fakt_get_payment",
+                name: "fakt_pay_get_payment",
                 description: "Get single payment by ID",
                 inputSchema: {
                   type: "object",
@@ -89,7 +89,7 @@ export const handler: Handler = async (
                 }
               },
               {
-                name: "fakt_create_payment",
+                name: "fakt_pay_create_payment",
                 description: "Create new payment in Fakturownia",
                 inputSchema: {
                   type: "object",
@@ -102,7 +102,7 @@ export const handler: Handler = async (
                 }
               },
               {
-                name: "fakt_update_payment",
+                name: "fakt_pay_update_payment",
                 description: "Update existing payment in Fakturownia",
                 inputSchema: {
                   type: "object",
@@ -116,7 +116,7 @@ export const handler: Handler = async (
                 }
               },
               {
-                name: "fakt_delete_payment",
+                name: "fakt_pay_delete_payment",
                 description: "Delete payment from Fakturownia",
                 inputSchema: {
                   type: "object",
@@ -151,9 +151,39 @@ export const handler: Handler = async (
           }),
         };
       }
+
+      // Map new names to old names for main server
+      const nameMapping = {
+        "fakt_pay_get_payments": "fakt_get_payments",
+        "fakt_pay_get_payment": "fakt_get_payment",
+        "fakt_pay_create_payment": "fakt_create_payment",
+        "fakt_pay_update_payment": "fakt_update_payment",
+        "fakt_pay_delete_payment": "fakt_delete_payment"
+      };
+
+      // Replace the tool name with mapped name before forwarding
+      const mappedRequest = {
+        ...request,
+        params: {
+          ...request.params,
+          name: nameMapping[toolName] || toolName
+        }
+      };
+
+      // Forward modified request to main server
+      const response = await axios.post(MAIN_SERVER_URL, mappedRequest, {
+        headers: { "Content-Type": "application/json" },
+        timeout: 30000
+      });
+
+      return {
+        statusCode: 200,
+        headers,
+        body: JSON.stringify(response.data),
+      };
     }
 
-    // Forward to main server
+    // Forward to main server (only for non-tools/call requests)
     const response = await axios.post(MAIN_SERVER_URL, request, {
       headers: { "Content-Type": "application/json" },
       timeout: 30000

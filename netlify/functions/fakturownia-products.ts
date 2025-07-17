@@ -44,10 +44,10 @@ export const handler: Handler = async (
     const request = JSON.parse(event.body || "{}");
 
     const allowedMethods = [
-      "fakt_get_products",
-      "fakt_get_product", 
-      "fakt_create_product",
-      "fakt_update_product"
+      "fakt_prod_get_products",
+      "fakt_prod_get_product", 
+      "fakt_prod_create_product",
+      "fakt_prod_update_product"
     ];
 
     if (request.method === "tools/list") {
@@ -60,7 +60,7 @@ export const handler: Handler = async (
           result: {
             tools: [
               {
-                name: "fakt_get_products",
+                name: "fakt_prod_get_products",
                 description: "Get list of products from Fakturownia",
                 inputSchema: {
                   type: "object",
@@ -74,7 +74,7 @@ export const handler: Handler = async (
                 }
               },
               {
-                name: "fakt_get_product",
+                name: "fakt_prod_get_product",
                 description: "Get single product by ID",
                 inputSchema: {
                   type: "object",
@@ -88,7 +88,7 @@ export const handler: Handler = async (
                 }
               },
               {
-                name: "fakt_create_product",
+                name: "fakt_prod_create_product",
                 description: "Create new product in Fakturownia",
                 inputSchema: {
                   type: "object",
@@ -101,7 +101,7 @@ export const handler: Handler = async (
                 }
               },
               {
-                name: "fakt_update_product",
+                name: "fakt_prod_update_product",
                 description: "Update existing product in Fakturownia",
                 inputSchema: {
                   type: "object",

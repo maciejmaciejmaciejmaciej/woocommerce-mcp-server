@@ -55,7 +55,7 @@ export const handler: Handler = async (
             tools: [
               // DEPARTMENTS
               {
-                name: "fakt_get_departments",
+                name: "fakt_dept_get_departments",
                 description: "Get list of departments from Fakturownia",
                 inputSchema: {
                   type: "object",
@@ -66,7 +66,7 @@ export const handler: Handler = async (
                 }
               },
               {
-                name: "fakt_get_department",
+                name: "fakt_dept_get_department",
                 description: "Get single department by ID",
                 inputSchema: {
                   type: "object",
@@ -79,7 +79,7 @@ export const handler: Handler = async (
                 }
               },
               {
-                name: "fakt_create_department",
+                name: "fakt_dept_create_department",
                 description: "Create new department in Fakturownia",
                 inputSchema: {
                   type: "object",
@@ -92,7 +92,7 @@ export const handler: Handler = async (
                 }
               },
               {
-                name: "fakt_update_department",
+                name: "fakt_dept_update_department",
                 description: "Update existing department in Fakturownia",
                 inputSchema: {
                   type: "object",
@@ -106,7 +106,7 @@ export const handler: Handler = async (
                 }
               },
               {
-                name: "fakt_delete_department",
+                name: "fakt_dept_delete_department",
                 description: "Delete department in Fakturownia",
                 inputSchema: {
                   type: "object",
@@ -120,7 +120,7 @@ export const handler: Handler = async (
               },
               // CATEGORIES
               {
-                name: "fakt_get_categories",
+                name: "fakt_dept_get_categories",
                 description: "Get list of categories from Fakturownia",
                 inputSchema: {
                   type: "object",
@@ -131,7 +131,7 @@ export const handler: Handler = async (
                 }
               },
               {
-                name: "fakt_get_category",
+                name: "fakt_dept_get_category",
                 description: "Get single category by ID",
                 inputSchema: {
                   type: "object",
@@ -144,7 +144,7 @@ export const handler: Handler = async (
                 }
               },
               {
-                name: "fakt_create_category",
+                name: "fakt_dept_create_category",
                 description: "Create new category in Fakturownia",
                 inputSchema: {
                   type: "object",

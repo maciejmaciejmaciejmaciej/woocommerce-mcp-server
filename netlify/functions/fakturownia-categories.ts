@@ -46,18 +46,18 @@ export const handler: Handler = async (
 
     // Only allow category, department and invoice assignment methods
     const allowedMethods = [
-      "fakt_get_categories",
-      "fakt_get_category", 
-      "fakt_create_category",
-      "fakt_update_category",
-      "fakt_delete_category",
-      "fakt_get_departments",
-      "fakt_get_department",
-      "fakt_create_department", 
-      "fakt_update_department",
-      "fakt_delete_department",
-      "fakt_get_invoice",
-      "fakt_update_invoice"
+      "fakt_cat_get_categories",
+      "fakt_cat_get_category", 
+      "fakt_cat_create_category",
+      "fakt_cat_update_category",
+      "fakt_cat_delete_category",
+      "fakt_cat_get_departments",
+      "fakt_cat_get_department",
+      "fakt_cat_create_department", 
+      "fakt_cat_update_department",
+      "fakt_cat_delete_department",
+      "fakt_cat_get_invoice",
+      "fakt_cat_update_invoice"
     ];
 
     if (request.method === "tools/list") {
@@ -71,7 +71,7 @@ export const handler: Handler = async (
             tools: [
               // CATEGORIES
               {
-                name: "fakt_get_categories",
+                name: "fakt_cat_get_categories",
                 description: "Get list of categories from Fakturownia",
                 inputSchema: {
                   type: "object",
@@ -84,7 +84,7 @@ export const handler: Handler = async (
                 }
               },
               {
-                name: "fakt_get_category",
+                name: "fakt_cat_get_category",
                 description: "Get single category by ID",
                 inputSchema: {
                   type: "object",
@@ -97,7 +97,7 @@ export const handler: Handler = async (
                 }
               },
               {
-                name: "fakt_create_category",
+                name: "fakt_cat_create_category",
                 description: "Create new category in Fakturownia",
                 inputSchema: {
                   type: "object",
@@ -117,7 +117,7 @@ export const handler: Handler = async (
                 }
               },
               {
-                name: "fakt_update_category",
+                name: "fakt_cat_update_category",
                 description: "Update existing category",
                 inputSchema: {
                   type: "object",
@@ -131,7 +131,7 @@ export const handler: Handler = async (
                 }
               },
               {
-                name: "fakt_delete_category",
+                name: "fakt_cat_delete_category",
                 description: "Delete category",
                 inputSchema: {
                   type: "object",
@@ -146,7 +146,7 @@ export const handler: Handler = async (
 
               // DEPARTMENTS  
               {
-                name: "fakt_get_departments",
+                name: "fakt_cat_get_departments",
                 description: "Get list of departments from Fakturownia",
                 inputSchema: {
                   type: "object",
@@ -159,7 +159,7 @@ export const handler: Handler = async (
                 }
               },
               {
-                name: "fakt_get_department",
+                name: "fakt_cat_get_department",
                 description: "Get single department by ID",
                 inputSchema: {
                   type: "object",
@@ -172,7 +172,7 @@ export const handler: Handler = async (
                 }
               },
               {
-                name: "fakt_create_department",
+                name: "fakt_cat_create_department",
                 description: "Create new department in Fakturownia",
                 inputSchema: {
                   type: "object",
@@ -193,7 +193,7 @@ export const handler: Handler = async (
                 }
               },
               {
-                name: "fakt_update_department",
+                name: "fakt_cat_update_department",
                 description: "Update existing department",
                 inputSchema: {
                   type: "object",
@@ -207,7 +207,7 @@ export const handler: Handler = async (
                 }
               },
               {
-                name: "fakt_delete_department",
+                name: "fakt_cat_delete_department",
                 description: "Delete department",
                 inputSchema: {
                   type: "object",
@@ -222,7 +222,7 @@ export const handler: Handler = async (
 
               // INVOICE ASSIGNMENT
               {
-                name: "fakt_get_invoice",
+                name: "fakt_cat_get_invoice",
                 description: "Get invoice details to check current category",
                 inputSchema: {
                   type: "object",
@@ -235,7 +235,7 @@ export const handler: Handler = async (
                 }
               },
               {
-                name: "fakt_update_invoice",
+                name: "fakt_cat_update_invoice",
                 description: "Update invoice to assign category or department",
                 inputSchema: {
                   type: "object",
